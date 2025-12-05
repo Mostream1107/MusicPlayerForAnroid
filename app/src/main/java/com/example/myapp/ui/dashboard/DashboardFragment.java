@@ -62,6 +62,7 @@ public class DashboardFragment extends Fragment {
     private SeekBar seekBar;
     private TextView tvCurrentTime;
     private TextView tvDuration;
+    private TextView tvLyric;
     private ImageView ivCover;
     private boolean isListVisible = false;
     private String lastCoverPath = null;
@@ -81,6 +82,8 @@ public class DashboardFragment extends Fragment {
     private int speedIndex = 1;
 
     private int currentSleepMinutes = 0;
+    private static final int NO_LYRIC_INDEX = -2;
+    private int lastLyricIndex = NO_LYRIC_INDEX;
 
     private final ServiceConnection connection = new ServiceConnection() {
         @Override
@@ -92,6 +95,7 @@ public class DashboardFragment extends Fragment {
             updatePlayButtonIcon();
             updateCoverFromService();
             updateModeButtonStyle();
+            refreshLyricDisplay();
         }
 
         @Override
@@ -124,6 +128,7 @@ public class DashboardFragment extends Fragment {
         seekBar = root.findViewById(R.id.seekBar);
         tvCurrentTime = root.findViewById(R.id.tvCurrentTime);
         tvDuration = root.findViewById(R.id.tvDuration);
+        tvLyric = root.findViewById(R.id.tvLyric);
         ivCover = root.findViewById(R.id.ivCover);
 
         btnMode.setText(modes[modeIndex]);
@@ -133,6 +138,9 @@ public class DashboardFragment extends Fragment {
         updateModeButtonStyle();
         tvCurrentTime.setText("00:00");
         tvDuration.setText("00:00");
+        if (tvLyric != null) {
+            tvLyric.setText("暂无歌词");
+        }
         ivCover.setImageResource(android.R.drawable.ic_menu_report_image);
         listView.setVisibility(View.GONE);
         btnToggleList.setText("展开列表");
@@ -159,6 +167,7 @@ public class DashboardFragment extends Fragment {
                 updatePlayButtonIcon();
                 lastCoverPath = selected.getPath();
                 updateCover(lastCoverPath);
+                refreshLyricDisplay();
             }
         });
 
@@ -247,6 +256,7 @@ public class DashboardFragment extends Fragment {
                     tvDuration.setText("00:00");
                 }
                 tvCurrentTime.setText(formatTime(pos));
+                updateLyricLine();
                 updatePlayButtonIcon();
                 if (currentSleepMinutes != 0 && !musicService.isSleepTimerActive()) {
                     currentSleepMinutes = 0;
@@ -290,7 +300,9 @@ public class DashboardFragment extends Fragment {
                         cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
                 String path = cursor.getString(
                         cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
-                musicList.add(new Music(title, path));
+                Music music = new Music(title, path);
+                music.setLyrics(LyricParser.parseFromAudioPath(path));
+                musicList.add(music);
             }
             cursor.close();
         }
@@ -344,6 +356,7 @@ public class DashboardFragment extends Fragment {
         adapter.notifyDataSetChanged();
         if (isBound) {
             musicService.setMusicList(musicList);
+            refreshLyricDisplay();
         }
     }
 
@@ -510,6 +523,7 @@ public class DashboardFragment extends Fragment {
             }
             lastCoverPath = path;
             updateCover(path);
+            refreshLyricDisplay();
         }
     }
 
@@ -533,5 +547,61 @@ public class DashboardFragment extends Fragment {
                 retriever.release();
             } catch (Exception ignored) { }
         }
+    }
+
+    private void refreshLyricDisplay() {
+        if (tvLyric == null) {
+            return;
+        }
+        Music current = (isBound && musicService != null) ? musicService.getCurrentMusic() : null;
+        if (current != null && current.hasLyrics()) {
+            List<LyricLine> lyrics = current.getLyrics();
+            if (!lyrics.isEmpty()) {
+                tvLyric.setText(lyrics.get(0).getText());
+                lastLyricIndex = -1;
+                return;
+            }
+        }
+        tvLyric.setText("暂无歌词");
+        lastLyricIndex = NO_LYRIC_INDEX;
+    }
+
+    private void updateLyricLine() {
+        if (!isBound || musicService == null || tvLyric == null) {
+            return;
+        }
+        Music current = musicService.getCurrentMusic();
+        if (current == null || !current.hasLyrics()) {
+            if (lastLyricIndex != NO_LYRIC_INDEX) {
+                tvLyric.setText("暂无歌词");
+                lastLyricIndex = NO_LYRIC_INDEX;
+            }
+            return;
+        }
+        List<LyricLine> lyrics = current.getLyrics();
+        if (lyrics.isEmpty()) {
+            return;
+        }
+        int pos = musicService.getCurrentPosition();
+        int index = findLyricIndex(lyrics, pos);
+        if (index >= 0 && index < lyrics.size() && index != lastLyricIndex) {
+            tvLyric.setText(lyrics.get(index).getText());
+            lastLyricIndex = index;
+        }
+    }
+
+    private int findLyricIndex(List<LyricLine> lyrics, int positionMs) {
+        if (lyrics == null || lyrics.isEmpty()) {
+            return -1;
+        }
+        int result = -1;
+        for (int i = 0; i < lyrics.size(); i++) {
+            if (positionMs >= lyrics.get(i).getTimestamp()) {
+                result = i;
+            } else {
+                break;
+            }
+        }
+        return result;
     }
 }

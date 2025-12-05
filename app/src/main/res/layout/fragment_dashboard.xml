@@ -9,7 +9,7 @@
         android:id="@+id/tvTitleMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="三驹兄弟团的 MusicPlayer"
+        android:text="MusicPlayer"
         android:textSize="20sp"
         android:textStyle="bold"
         android:gravity="center"
@@ -64,6 +64,19 @@
         android:progress="0"
         android:progressTint="#7051FF"
         android:thumbTint="#7051FF" />
+
+    <TextView
+        android:id="@+id/tvLyric"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="暂无歌词"
+        android:textSize="16sp"
+        android:textColor="#3A2B6A"
+        android:gravity="center"
+        android:maxLines="2"
+        android:ellipsize="end" />
 
     <!-- 播放控制 3 按钮 -->
     <LinearLayout
