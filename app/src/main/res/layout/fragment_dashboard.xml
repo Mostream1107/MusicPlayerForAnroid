@@ -2,18 +2,19 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp">
+    android:padding="16dp"
+    android:background="#F7F7FB">
 
     <TextView
         android:id="@+id/tvTitleMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="🎵 三驹兄弟团的MusicPlayer"
-        android:textSize="22sp"
+        android:text="三驹兄弟团的 MusicPlayer"
+        android:textSize="20sp"
         android:textStyle="bold"
         android:gravity="center"
-        android:padding="10dp"
-        android:textColor="#000" />
+        android:padding="8dp"
+        android:textColor="#221C44" />
 
     <ImageView
         android:id="@+id/ivCover"
@@ -21,49 +22,12 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:minHeight="220dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="12dp"
         android:scaleType="centerCrop"
         android:adjustViewBounds="true"
-        android:background="#EEE"
+        android:background="#E5E2F5"
         android:contentDescription="封面" />
-
-    <Button
-        android:id="@+id/btnToggleList"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="展开列表" />
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:paddingBottom="40dp">
-
-        <Button
-            android:id="@+id/btnSpeed"
-            android:text="1x"
-            android:layout_marginStart="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:id="@+id/btnRefresh"
-            android:layout_marginStart="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="刷新列表" />
-
-        <Button
-            android:id="@+id/btnSleepTimer"
-            android:layout_marginStart="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="睡眠定时" />
-
-    </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -78,7 +42,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="00:00"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:textColor="#6E6888" />
 
         <TextView
             android:id="@+id/tvDuration"
@@ -87,7 +52,8 @@
             android:layout_weight="1"
             android:gravity="end"
             android:text="00:00"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:textColor="#6E6888" />
     </LinearLayout>
 
     <SeekBar
@@ -95,52 +61,170 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:max="100"
-        android:progress="0" />
+        android:progress="0"
+        android:progressTint="#7051FF"
+        android:thumbTint="#7051FF" />
+
+    <!-- 播放控制 3 按钮 -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp">
+
+        <ImageButton
+            android:id="@+id/btnPrev"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/bg_control_outline"
+            android:padding="12dp"
+            android:src="@android:drawable/ic_media_previous"
+            android:tint="#5B3FFF"
+            android:contentDescription="上一首" />
+
+        <ImageButton
+            android:id="@+id/btnPlay"
+            android:layout_width="86dp"
+            android:layout_height="86dp"
+            android:background="@drawable/bg_control_primary"
+            android:elevation="6dp"
+            android:padding="20dp"
+            android:src="@android:drawable/ic_media_play"
+            android:tint="#FFFFFF"
+            android:contentDescription="播放或暂停" />
+
+        <ImageButton
+            android:id="@+id/btnNext"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/bg_control_outline"
+            android:padding="12dp"
+            android:src="@android:drawable/ic_media_next"
+            android:tint="#5B3FFF"
+            android:contentDescription="下一首" />
+    </LinearLayout>
+
+    <!-- 功能按钮行 -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:gravity="center"
+        android:weightSum="5">
+
+        <Button
+            android:id="@+id/btnToggleList"
+            style="@style/Widget.AppCompat.Button"
+            android:layout_width="0dp"
+            android:layout_height="72dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="6dp"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:background="@drawable/bg_function_chip"
+            android:backgroundTint="@null"
+            android:textAllCaps="false"
+            android:text="展开列表"
+            android:textColor="#3A2B6A"
+            android:textSize="12sp"
+            android:drawableTop="@android:drawable/ic_menu_sort_by_size"
+            android:drawablePadding="4dp"
+            android:drawableTint="#3A6FF7"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/btnSpeed"
+            style="@style/Widget.AppCompat.Button"
+            android:layout_width="0dp"
+            android:layout_height="72dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="6dp"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:background="@drawable/bg_function_chip"
+            android:backgroundTint="@null"
+            android:textAllCaps="false"
+            android:text="1.0X"
+            android:textColor="#3A2B6A"
+            android:textSize="12sp"
+            android:drawableTop="@android:drawable/ic_media_ff"
+            android:drawablePadding="4dp"
+            android:drawableTint="#3A6FF7"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/btnRefresh"
+            style="@style/Widget.AppCompat.Button"
+            android:layout_width="0dp"
+            android:layout_height="72dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="6dp"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:background="@drawable/bg_function_chip"
+            android:backgroundTint="@null"
+            android:textAllCaps="false"
+            android:text="刷新列表"
+            android:textColor="#3A2B6A"
+            android:textSize="12sp"
+            android:drawableTop="@android:drawable/ic_popup_sync"
+            android:drawablePadding="4dp"
+            android:drawableTint="#3A6FF7"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/btnSleepTimer"
+            style="@style/Widget.AppCompat.Button"
+            android:layout_width="0dp"
+            android:layout_height="72dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="6dp"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:background="@drawable/bg_function_chip"
+            android:backgroundTint="@null"
+            android:textAllCaps="false"
+            android:text="睡眠定时"
+            android:textColor="#3A2B6A"
+            android:textSize="12sp"
+            android:drawableTop="@android:drawable/ic_menu_recent_history"
+            android:drawablePadding="4dp"
+            android:drawableTint="#3A6FF7"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/btnMode"
+            style="@style/Widget.AppCompat.Button"
+            android:layout_width="0dp"
+            android:layout_height="72dp"
+            android:layout_weight="1"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:background="@drawable/bg_function_chip"
+            android:backgroundTint="@null"
+            android:textAllCaps="false"
+            android:text="顺序"
+            android:textColor="#3A2B6A"
+            android:textSize="12sp"
+            android:drawableTop="@android:drawable/ic_menu_revert"
+            android:drawablePadding="4dp"
+            android:drawableTint="#3A6FF7"
+            android:gravity="center" />
+    </LinearLayout>
 
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:divider="#CCCCCC"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="#DDDDDD"
         android:dividerHeight="1dp"
-        android:visibility="gone" />
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:paddingBottom="40dp">
-
-        <Button
-            android:id="@+id/btnPrev"
-            android:text="上一首"
-            android:layout_marginStart="5dp"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content" />
-
-        <Button
-            android:id="@+id/btnPlay"
-            android:text="播放/暂停"
-            android:layout_marginStart="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:id="@+id/btnNext"
-            android:text="下一首"
-            android:layout_marginStart="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:id="@+id/btnMode"
-            android:text="顺序"
-            android:layout_marginStart="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
+        android:visibility="gone"
+        android:background="#FFFFFF" />
 
 </LinearLayout>

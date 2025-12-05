@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
@@ -26,6 +27,7 @@ import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SeekBar;
@@ -49,9 +51,9 @@ import java.util.Locale;
 public class DashboardFragment extends Fragment {
 
     private ListView listView;
-    private Button btnPrev;
-    private Button btnPlay;
-    private Button btnNext;
+    private ImageButton btnPrev;
+    private ImageButton btnPlay;
+    private ImageButton btnNext;
     private Button btnMode;
     private Button btnSpeed;
     private Button btnRefresh;
@@ -62,6 +64,7 @@ public class DashboardFragment extends Fragment {
     private TextView tvDuration;
     private ImageView ivCover;
     private boolean isListVisible = false;
+    private String lastCoverPath = null;
 
     private MusicAdapter adapter;
     private final List<Music> musicList = new ArrayList<>();
@@ -86,6 +89,9 @@ public class DashboardFragment extends Fragment {
             musicService = binder.getService();
             musicService.setMusicList(musicList);
             isBound = true;
+            updatePlayButtonIcon();
+            updateCoverFromService();
+            updateModeButtonStyle();
         }
 
         @Override
@@ -121,9 +127,10 @@ public class DashboardFragment extends Fragment {
         ivCover = root.findViewById(R.id.ivCover);
 
         btnMode.setText(modes[modeIndex]);
-        btnSpeed.setText("1.0x");
+        btnSpeed.setText("1.0X");
         btnRefresh.setText("刷新列表");
         updateSleepTimerText();
+        updateModeButtonStyle();
         tvCurrentTime.setText("00:00");
         tvDuration.setText("00:00");
         ivCover.setImageResource(android.R.drawable.ic_menu_report_image);
@@ -147,20 +154,25 @@ public class DashboardFragment extends Fragment {
 
         listView.setOnItemClickListener((p, v, pos, id) -> {
             if (isBound) {
+                Music selected = musicList.get(pos);
                 musicService.play(pos);
-                updateCover(musicList.get(pos).getPath());
+                updatePlayButtonIcon();
+                lastCoverPath = selected.getPath();
+                updateCover(lastCoverPath);
             }
         });
 
         btnPlay.setOnClickListener(v -> {
             if (isBound) {
                 musicService.pauseOrResume();
+                updatePlayButtonIcon();
             }
         });
 
         btnNext.setOnClickListener(v -> {
             if (isBound) {
                 musicService.next();
+                updatePlayButtonIcon();
                 updateCoverFromService();
             }
         });
@@ -168,6 +180,7 @@ public class DashboardFragment extends Fragment {
         btnPrev.setOnClickListener(v -> {
             if (isBound) {
                 musicService.prev();
+                updatePlayButtonIcon();
                 updateCoverFromService();
             }
         });
@@ -216,7 +229,7 @@ public class DashboardFragment extends Fragment {
         speedIndex = (speedIndex + 1) % speedList.length;
         float speed = speedList[speedIndex];
         musicService.setSpeed(speed);
-        btnSpeed.setText(speed + "x");
+        btnSpeed.setText(String.format(Locale.getDefault(), "%.1fX", speed));
     }
 
     private final Runnable updateSeek = new Runnable() {
@@ -234,11 +247,11 @@ public class DashboardFragment extends Fragment {
                     tvDuration.setText("00:00");
                 }
                 tvCurrentTime.setText(formatTime(pos));
+                updatePlayButtonIcon();
                 if (currentSleepMinutes != 0 && !musicService.isSleepTimerActive()) {
                     currentSleepMinutes = 0;
                     updateSleepTimerText();
                 }
-                updateCoverFromService();
             }
             if (handler != null) {
                 handler.postDelayed(this, 500);
@@ -252,7 +265,6 @@ public class DashboardFragment extends Fragment {
             return;
         }
         modeIndex = (modeIndex + 1) % modes.length;
-        btnMode.setText(modes[modeIndex]);
         if (modeIndex == 0) {
             musicService.setLoop(false);
             musicService.setRandom(false);
@@ -263,6 +275,7 @@ public class DashboardFragment extends Fragment {
             musicService.setLoop(false);
             musicService.setRandom(true);
         }
+        updateModeButtonStyle();
     }
 
     private void loadMusic() {
@@ -444,6 +457,30 @@ public class DashboardFragment extends Fragment {
         return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
     }
 
+    private void updateModeButtonStyle() {
+        if (btnMode == null) {
+            return;
+        }
+        btnMode.setText(modes[modeIndex]);
+        if (modeIndex == 0) {
+            btnMode.setBackgroundResource(R.drawable.bg_function_chip);
+            btnMode.setTextColor(Color.parseColor("#3A2B6A"));
+        } else {
+            btnMode.setBackgroundResource(R.drawable.bg_function_chip_active);
+            btnMode.setTextColor(Color.WHITE);
+        }
+    }
+
+    private void updatePlayButtonIcon() {
+        if (btnPlay == null || musicService == null || !isBound) {
+            return;
+        }
+        int icon = musicService.isPlaying()
+                ? android.R.drawable.ic_media_pause
+                : android.R.drawable.ic_media_play;
+        btnPlay.setImageResource(icon);
+    }
+
     private void updateSleepTimerText() {
         if (btnSleepTimer == null) {
             return;
@@ -467,7 +504,12 @@ public class DashboardFragment extends Fragment {
         }
         Music current = musicService.getCurrentMusic();
         if (current != null) {
-            updateCover(current.getPath());
+            String path = current.getPath();
+            if (TextUtils.equals(lastCoverPath, path)) {
+                return;
+            }
+            lastCoverPath = path;
+            updateCover(path);
         }
     }
 

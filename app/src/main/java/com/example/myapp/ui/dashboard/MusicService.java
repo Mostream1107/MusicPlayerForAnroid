@@ -67,6 +67,9 @@ public class MusicService extends Service {
 
     public void pauseOrResume() {
         if (player == null) {
+            if (musicList != null && !musicList.isEmpty()) {
+                play(currentIndex);
+            }
             return;
         }
         if (player.isPlaying()) {
