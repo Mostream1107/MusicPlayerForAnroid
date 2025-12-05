@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FAFAFA"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- 系统标题 -->
+        <TextView
+            android:id="@+id/textHome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🎵 三驱兄弟团的MusicPlayer系统"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:padding="10dp"
+            android:gravity="center" />
+
+        <!-- 分割线 -->
+        <View
+            android:layout_width="100dp"
+            android:layout_height="2dp"
+            android:background="#CCCCCC"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="12dp" />
+
+        <!-- 系统简介文字 -->
+        <TextView
+            android:id="@+id/tvSystemIntro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="本系统是一个基于 Android 的音乐播放应用，具有以下功能：\n\n
+        1. 自动扫描 SD 卡中的音频文件；\n
+        2. 列表展示所有歌曲信息；\n
+        3. 支持播放、暂停、上一首、下一首包括跳转播放、倍速控制(X0.5、X1 、 X1.5 、X2)；\n\n
+        4. 支持顺序播放、单曲循环和随机播放三种模式；\n
+        5. 使用本地文件存储，无需数据库即可运行。\n\n
+        但仍然有未实现的功能：无法获取获取未载入SDcard的音乐\n\n
+        请通过底部导航栏切换到“我的音乐”页面体验播放功能。"
+        android:textSize="16sp"
+        android:lineSpacingExtra="4dp"
+        android:textColor="#444444"
+        android:padding="10dp" />
+
+    </LinearLayout>
+</ScrollView>

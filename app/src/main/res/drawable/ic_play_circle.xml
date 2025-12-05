@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 圆形背景 -->
+    <path
+        android:fillColor="#673AB7"
+        android:pathData="M12,2C6.48,2 2,6.48 2,12s4.48,10 10,10 10,-4.48 10,-10S17.52,2 12,2z"/>
+
+    <!-- 三角形播放按钮 -->
+    <path
+        android:fillColor="#3F51B5"
+        android:pathData="M10,8 L16,12 L10,16 z"/>
+</selector>

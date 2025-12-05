@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 右三角形 -->
+    <path
+        android:fillColor="#9C27B0"
+        android:pathData="M13,12L5,18V6l8,6z"/>
+
+    <!-- 右竖条 -->
+    <path
+        android:fillColor="#3F51B5"
+        android:pathData="M17,6h2v12h-2z"/>
+</selector>
